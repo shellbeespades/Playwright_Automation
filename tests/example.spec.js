@@ -1,5 +1,22 @@
-// @ts-check
 import { test, expect } from '@playwright/test';
+
+let context;
+let page;
+
+test.beforeAll(async ({ browser }) => {
+
+  context = await browser.newContext();
+  await (await context).tracing.start({
+    snapshots: true,
+    screenshots: true,
+  });
+  page = await context.newPage();
+});
+
+test.afterAll(async ({}) => {
+  await context.tracing.stop({ path: 'test2_trace.zip' });
+});
+
 
 test('has title', async ({ page }) => {
   await page.goto('https://playwright.dev/');
